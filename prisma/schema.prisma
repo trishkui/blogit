@@ -12,13 +12,29 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model User{
-  id String @default(uuid()) @id
-  firstName String
-  lastName String
+
+model User {
+  id           String @id @default(uuid())
+  firstName    String
+  lastName     String
   emailAddress String @unique
-  userName String
-  password String
+  userName     String
+  password     String
+  blogs        Blog[]
 
   @@map("users")
+}
+
+model Blog {
+  id            String   @id @default(uuid())
+  title         String
+  excerpt       String
+  body          String
+  featuredImage String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  owner         String
+  user          User     @relation(fields: [owner], references: [id])
+
+  @@map("blogs")
 }
